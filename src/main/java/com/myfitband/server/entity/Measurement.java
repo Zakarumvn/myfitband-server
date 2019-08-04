@@ -1,5 +1,7 @@
 package com.myfitband.server.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -20,7 +22,8 @@ public class Measurement {
     private LocalDateTime date;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "measurements")
+    @JoinColumn(name = "workout")
+    @JsonBackReference
     private Workout workout;
 
     public Integer getMeasurementId() {

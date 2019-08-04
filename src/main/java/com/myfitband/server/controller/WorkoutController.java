@@ -1,6 +1,9 @@
 package com.myfitband.server.controller;
 
+import com.myfitband.server.config.MockSession;
+import com.myfitband.server.dto.PulseDTO;
 import com.myfitband.server.entity.Workout;
+import com.myfitband.server.service.MeasurementService;
 import com.myfitband.server.service.WorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,15 +17,27 @@ import java.util.List;
 @RestController
 public class WorkoutController {
 
-    @Autowired WorkoutService workoutService;
+    @Autowired
+    WorkoutService workoutService;
+
+    @Autowired
+    MockSession session;
+
+    @Autowired
+    MeasurementService measurementService;
 
     @GetMapping("/list")
     public List<Workout> getWorkouts(){
-        return workoutService.getWorkoutList();
+        return workoutService.getWorkoutList(session.getUser().getUserId());
     }
 
     @GetMapping("/{workoutId}")
     public Workout getWorkout(@PathVariable Integer workoutId){
         return workoutService.getWorkout(workoutId);
+    }
+
+    @GetMapping("/pulse/{workoutId}")
+    public List<PulseDTO> getPulseMeasurements(@PathVariable Integer workoutId){
+        return measurementService.getPulseMeasurementsForChart(workoutId);
     }
 }

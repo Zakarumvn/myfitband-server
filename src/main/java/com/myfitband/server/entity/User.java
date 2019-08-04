@@ -1,11 +1,20 @@
 package com.myfitband.server.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User {
+
+    public User(){}
+
+    public User(Integer id){
+        this.userId = id;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,6 +34,10 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private PhysicalProperties physicalProperties;
+
+    @OneToMany(mappedBy = "user")
+    @JsonBackReference
+    private Set<Workout> workouts;
 
     public Integer getUserId() {
         return userId;
@@ -86,8 +99,18 @@ public class User {
         return physicalProperties;
     }
 
+    public Set<Workout> getWorkouts() {
+        return workouts;
+    }
+
+    public void setWorkouts(Set<Workout> workouts) {
+        this.workouts = workouts;
+    }
+
     public void setPhysicalProperties(PhysicalProperties physicalProperties) {
         this.physicalProperties = physicalProperties;
+
+
     }
 
 

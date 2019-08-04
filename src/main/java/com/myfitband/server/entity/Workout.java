@@ -1,6 +1,8 @@
 package com.myfitband.server.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -17,7 +19,8 @@ public class Workout {
 
     private LocalDateTime stopDT;
 
-    @OneToMany(mappedBy = "workout")
+    @OneToMany(mappedBy = "workout", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<Measurement> measurements;
 
     @OneToMany(mappedBy = "workout")
@@ -26,6 +29,11 @@ public class Workout {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sport")
     private Sport sport;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user")
+    @JsonManagedReference
+    private User user;
 
     public Integer getWorkoutId() {
         return workoutId;
@@ -73,5 +81,13 @@ public class Workout {
 
     public void setSport(Sport sport) {
         this.sport = sport;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
