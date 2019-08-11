@@ -3,9 +3,12 @@ package com.myfitband.server.service;
 import com.myfitband.server.dao.*;
 import com.myfitband.server.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.codec.Hex;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 
 @Service
@@ -27,7 +30,7 @@ public class InitService {
     MeasurementTypeRepository measurementTypeRepository;
 
     @PostConstruct
-    public void initData(){
+    public void initData() throws NoSuchAlgorithmException {
 
         if(sportRepository.findAll().size() == 0){
             User user = new User();
@@ -36,7 +39,9 @@ public class InitService {
             user.setEmail("testowa.kasia@gmail.com");
             user.setLogin("testowa");
             user.setBirthDate(LocalDateTime.now().minusYears(20));
-            user.setPassword("kasia");
+            byte [] passBytes = MessageDigest.getInstance("MD5").digest("kasia".getBytes());
+            String pass = new String(Hex.encode(passBytes));
+            user.setPassword(pass);
             userRepository.save(user);
 
             Sport s1 = new Sport();
