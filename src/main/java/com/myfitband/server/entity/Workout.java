@@ -23,7 +23,8 @@ public class Workout {
     @JsonManagedReference
     private Set<Measurement> measurements;
 
-    @OneToMany(mappedBy = "workout")
+    @JsonManagedReference
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="workout")
     private Set<GPSdata> gpsData;
 
     @ManyToOne(fetch = FetchType.EAGER)

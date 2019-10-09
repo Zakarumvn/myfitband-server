@@ -26,6 +26,9 @@ public class InitService {
     @Autowired
     MeasurementTypeRepository measurementTypeRepository;
 
+    @Autowired
+    GPSDataRepository gpsDataRepository;
+
     @PostConstruct
     public void initData(){
 
@@ -103,6 +106,70 @@ public class InitService {
                 m5.setValue("63");
                 m5.setWorkout(w1);
                 measurementRepository.save(m5);
+
+                GPSdata g1 = new GPSdata();
+                g1.setDate(LocalDateTime.now());
+                g1.setWorkout(w1);
+                //longitude
+                g1.setGpsX(22.5276146);
+                //latitude
+                g1.setGpsY(51.2708819);
+
+                GPSdata g2 = new GPSdata();
+                g2.setDate(LocalDateTime.now().plusSeconds(30));
+                g2.setWorkout(w1);
+                //longitude
+                g2.setGpsX(22.528085);
+                //latitude
+                g2.setGpsY(51.270903);
+
+                GPSdata g3 = new GPSdata();
+                g3.setDate(LocalDateTime.now().plusSeconds(50));
+                g3.setWorkout(w1);
+                //longitude
+                g3.setGpsX(22.527542);
+                //latitude
+                g3.setGpsY(51.270407);
+
+                GPSdata g4 = new GPSdata();
+                g4.setDate(LocalDateTime.now().plusSeconds(70));
+                g4.setWorkout(w1);
+                //longitude
+                g4.setGpsX(22.528068);
+                //latitude
+                g4.setGpsY(51.270642);
+
+                GPSdata g5 = new GPSdata();
+                g5.setDate(LocalDateTime.now().plusSeconds(90));
+                g5.setWorkout(w1);
+                //longitude
+                g5.setGpsX(22.526576);
+                //latitude
+                g5.setGpsY(51.270446);
+
+                GPSdata g6 = new GPSdata();
+                g6.setDate(LocalDateTime.now().plusSeconds(110));
+                g6.setWorkout(w1);
+                //longitude
+                g6.setGpsX(22.526557);
+                //latitude
+                g6.setGpsY(51.269930);
+
+                GPSdata g7 = new GPSdata();
+                g7.setDate(LocalDateTime.now().plusSeconds(130));
+                g7.setWorkout(w1);
+                //longitude
+                g7.setGpsX(22.527206);
+                //latitude
+                g7.setGpsY(51.269648);
+
+                gpsDataRepository.save(g1);
+                gpsDataRepository.save(g2);
+                gpsDataRepository.save(g3);
+                gpsDataRepository.save(g4);
+                gpsDataRepository.save(g5);
+                gpsDataRepository.save(g6);
+                gpsDataRepository.save(g7);
             }
 
 

@@ -1,5 +1,7 @@
 package com.myfitband.server.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -11,8 +13,9 @@ public class GPSdata {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer gpsDataId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "gpsData")
+    @JsonBackReference
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="workoutId")
     private Workout workout;
 
     private Double gpsX;

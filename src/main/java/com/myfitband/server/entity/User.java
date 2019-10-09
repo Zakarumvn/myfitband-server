@@ -10,12 +10,6 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
 
-    public User(){}
-
-    public User(Integer id){
-        this.userId = id;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer userId;
@@ -38,6 +32,12 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonBackReference
     private Set<Workout> workouts;
+
+    public User(){}
+
+    public User(Integer id){
+        this.userId = id;
+    }
 
     public Integer getUserId() {
         return userId;
