@@ -170,11 +170,67 @@ public class InitService {
                 gpsDataRepository.save(g5);
                 gpsDataRepository.save(g6);
                 gpsDataRepository.save(g7);
+
+                //map 2
+
+
+                GPSdata g21 = new GPSdata();
+                g21.setDate(LocalDateTime.now());
+                g21.setWorkout(w2);
+                //longitude
+                g21.setGpsX(22.549046);
+                //latitude
+                g21.setGpsY(51.235723);
+
+                GPSdata g22 = new GPSdata();
+                g22.setDate(LocalDateTime.now().plusSeconds(30));
+                g22.setWorkout(w2);
+                //longitude
+                g22.setGpsX(22.548440);
+                //latitude
+                g22.setGpsY(51.236049);
+
+
+                GPSdata g23 = new GPSdata();
+                g23.setDate(LocalDateTime.now().plusSeconds(50));
+                g23.setWorkout(w2);
+                //longitude
+                g23.setGpsX(22.547624);
+                //latitude
+                g23.setGpsY(51.236489);
+
+                GPSdata g24 = new GPSdata();
+                g24.setDate(LocalDateTime.now().plusSeconds(70));
+                g24.setWorkout(w2);
+                //longitude
+                g24.setGpsX(22.545861);
+                //latitude
+                g24.setGpsY(51.236917);
+
+                GPSdata g25 = new GPSdata();
+                g25.setDate(LocalDateTime.now().plusSeconds(90));
+                g25.setWorkout(w2);
+                //longitude
+                g25.setGpsX(22.543836);
+                //latitude
+                g25.setGpsY(51.237307);
+
+                GPSdata g26 = new GPSdata();
+                g26.setDate(LocalDateTime.now().plusSeconds(110));
+                g26.setWorkout(w2);
+                //longitude
+                g26.setGpsX(22.543510);
+                //latitude
+                g26.setGpsY(51.239161);
+
+                gpsDataRepository.save(g21);
+                gpsDataRepository.save(g22);
+                gpsDataRepository.save(g23);
+                gpsDataRepository.save(g24);
+                gpsDataRepository.save(g25);
+                gpsDataRepository.save(g26);
             }
-
-
         }
-
 
     }
 
