@@ -10,4 +10,6 @@ import java.util.List;
 public interface MeasurementRepository extends JpaRepository<Measurement, Integer> {
 
     List<Measurement> findAllByWorkoutWorkoutId(Integer workoutId);
+
+    List<Measurement> findAllByUserUserIdAndUserNotNull(Integer userId);
 }

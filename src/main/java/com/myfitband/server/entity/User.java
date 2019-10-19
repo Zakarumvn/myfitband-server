@@ -45,6 +45,9 @@ public class User  implements Serializable {
     @JsonBackReference(value = "user-settings")
     private Setting setting;
 
+    @OneToMany(mappedBy = "user")
+    @JsonBackReference(value = "user-measurements")
+    private List<Measurement> weightMeasurementList;
     public User(){}
 
     public User(Integer id){
@@ -137,5 +140,13 @@ public class User  implements Serializable {
 
     public void setSetting(Setting setting) {
         this.setting = setting;
+    }
+
+    public List<Measurement> getWeightMeasurementList() {
+        return weightMeasurementList;
+    }
+
+    public void setWeightMeasurementList(List<Measurement> weightMeasurementList) {
+        this.weightMeasurementList = weightMeasurementList;
     }
 }

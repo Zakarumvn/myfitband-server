@@ -2,7 +2,7 @@ package com.myfitband.server.controller;
 
 import com.myfitband.server.config.MockSession;
 import com.myfitband.server.dto.DateObject;
-import com.myfitband.server.dto.PulseDTO;
+import com.myfitband.server.dto.MeasurementDTO;
 import com.myfitband.server.entity.*;
 import com.myfitband.server.service.GPSdataService;
 import com.myfitband.server.service.MeasurementService;
@@ -43,7 +43,7 @@ public class WorkoutController {
     }
 
     @GetMapping("/pulse/{workoutId}")
-    public List<PulseDTO> getPulseMeasurements(@PathVariable Integer workoutId){
+    public List<MeasurementDTO> getPulseMeasurements(@PathVariable Integer workoutId){
         return measurementService.getPulseMeasurementsForChart(workoutId);
     }
 
@@ -77,4 +77,8 @@ public class WorkoutController {
         return settingService.loadAlerts(session.getUser().getUserId());
     }
 
+    @GetMapping("/weight")
+    public List<MeasurementDTO> getWeightMeasurements(){
+        return measurementService.getWeightMeasurementsForChart(session.getUser().getUserId());
+    }
 }

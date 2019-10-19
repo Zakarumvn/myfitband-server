@@ -93,16 +93,21 @@ public class InitService {
                 measurementType.setDescription("pomiar pulsu");
                 measurementTypeRepository.save(measurementType);
 
+                MeasurementType measurementType2 = new MeasurementType();
+                measurementType2.setDescription("pomiar wagi");
+                measurementTypeRepository.save(measurementType2);
+
                 Random generator = new Random();
 
-                for (int i = 0; i < 200; i++) {
+                for (int i = 0; i < 2000; i++) {
                     LocalDateTime ldt = LocalDateTime.now();
                     ldt.plusSeconds(5);
                     measurementRepository.save(new Measurement(
                             measurementType,
                             String.valueOf(generator.nextInt(101)+ 90),
                             ldt,
-                            w1
+                            w1,
+                            null
                     ));
 
                 }
@@ -252,6 +257,21 @@ public class InitService {
                 alert2.setDate(LocalDateTime.now());
                 alert2.setDescription("Uwaga! System wykrył brak aktywności podczas treningu.");
                 alertRepository.save(alert2);
+
+
+                Double x = new Double("55.0");
+                LocalDateTime weightMeasuremntDate = LocalDateTime.now().minusDays(30);
+                for (int i = 0; i < 25; i++) {
+                    LocalDateTime date = weightMeasuremntDate.plusDays(i);
+                    measurementRepository.save(new Measurement(
+                            measurementType2,
+                            String.valueOf(generator.nextDouble()*10+ 45),
+                            date,
+                            null,
+                            user
+                    ));
+
+                }
 
             }
         }

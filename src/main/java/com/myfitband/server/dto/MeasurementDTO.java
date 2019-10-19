@@ -1,14 +1,14 @@
 package com.myfitband.server.dto;
 
-public class PulseDTO {
+public class MeasurementDTO {
 
     private String date;
 
     private String value;
 
-    public PulseDTO(){}
+    public MeasurementDTO(){}
 
-    public PulseDTO(String date, String value) {
+    public MeasurementDTO(String date, String value) {
         this.date = date;
         this.value = value;
     }
