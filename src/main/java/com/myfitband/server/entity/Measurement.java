@@ -23,8 +23,17 @@ public class Measurement {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workout")
-    @JsonBackReference
+    @JsonBackReference("workout-measurements")
     private Workout workout;
+
+    public Measurement(){}
+
+    public Measurement(MeasurementType measurementType, String value, LocalDateTime date, Workout workout) {
+        this.measurementType = measurementType;
+        this.value = value;
+        this.date = date;
+        this.workout = workout;
+    }
 
     public Integer getMeasurementId() {
         return measurementId;

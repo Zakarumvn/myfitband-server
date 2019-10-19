@@ -1,5 +1,8 @@
 package com.myfitband.server.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -12,12 +15,14 @@ public class Setting implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer settingId;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Europe/Warsaw")
     private Date notificationTime;
 
     private Short active;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user")
+    @JsonManagedReference(value = "user-settings")
     private User user;
 
     public Setting(){}
@@ -40,6 +45,7 @@ public class Setting implements Serializable {
         this.settingId = settingId;
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Europe/Warsaw")
     public Date getNotificationTime() {
         return notificationTime;
     }
@@ -63,4 +69,6 @@ public class Setting implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
+
+
 }

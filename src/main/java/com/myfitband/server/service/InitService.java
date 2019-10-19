@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.Random;
 
 @Service
 public class InitService {
@@ -29,6 +31,15 @@ public class InitService {
     @Autowired
     GPSDataRepository gpsDataRepository;
 
+    @Autowired
+    PhysicalPropertiesRepository physicalPropertiesRepository;
+
+    @Autowired
+    AlertTypeRepository alertTypeRepository;
+
+    @Autowired
+    AlertRepository alertRepository;
+
     @PostConstruct
     public void initData(){
 
@@ -41,6 +52,17 @@ public class InitService {
             user.setBirthDate(LocalDateTime.now().minusYears(20));
             user.setPassword("kasia");
             userRepository.save(user);
+
+            PhysicalProperties physicalProperties = new PhysicalProperties();
+            physicalProperties.setUser(user);
+            physicalProperties.setRelaxPulse(70);
+            physicalProperties.setStressPulse(190);
+            physicalProperties.setHeight(160);
+            physicalProperties.setBoneMass(2.1);
+            physicalProperties.setFatMass(21.0);
+            physicalProperties.setMuscleMass(60.0);
+            physicalProperties.setWater(50.0);
+            physicalPropertiesRepository.save(physicalProperties);
 
             Sport s1 = new Sport();
             s1.setName("bieganie");
@@ -71,41 +93,19 @@ public class InitService {
                 measurementType.setDescription("pomiar pulsu");
                 measurementTypeRepository.save(measurementType);
 
+                Random generator = new Random();
 
-                Measurement m1 = new Measurement();
-                m1.setMeasurementType(measurementType);
-                m1.setDate(LocalDateTime.now());
-                m1.setValue("42");
-                m1.setWorkout(w1);
-                measurementRepository.save(m1);
+                for (int i = 0; i < 200; i++) {
+                    LocalDateTime ldt = LocalDateTime.now();
+                    ldt.plusSeconds(5);
+                    measurementRepository.save(new Measurement(
+                            measurementType,
+                            String.valueOf(generator.nextInt(101)+ 90),
+                            ldt,
+                            w1
+                    ));
 
-                Measurement m2 = new Measurement();
-                m2.setMeasurementType(measurementType);
-                m2.setDate(LocalDateTime.now().plusMinutes(1));
-                m2.setValue("46");
-                m2.setWorkout(w1);
-                measurementRepository.save(m2);
-
-                Measurement m3 = new Measurement();
-                m3.setMeasurementType(measurementType);
-                m3.setDate(LocalDateTime.now().plusMinutes(2));
-                m3.setValue("51");
-                m3.setWorkout(w1);
-                measurementRepository.save(m3);
-
-                Measurement m4 = new Measurement();
-                m4.setMeasurementType(measurementType);
-                m4.setDate(LocalDateTime.now().plusMinutes(3));
-                m4.setValue("58");
-                m4.setWorkout(w1);
-                measurementRepository.save(m4);
-
-                Measurement m5 = new Measurement();
-                m5.setMeasurementType(measurementType);
-                m5.setDate(LocalDateTime.now().plusMinutes(4));
-                m5.setValue("63");
-                m5.setWorkout(w1);
-                measurementRepository.save(m5);
+                }
 
                 GPSdata g1 = new GPSdata();
                 g1.setDate(LocalDateTime.now());
@@ -229,6 +229,30 @@ public class InitService {
                 gpsDataRepository.save(g24);
                 gpsDataRepository.save(g25);
                 gpsDataRepository.save(g26);
+
+                AlertType alertType1 = new AlertType();
+                alertType1.setDescription("przemęczenie");
+                alertTypeRepository.save(alertType1);
+
+                AlertType alertType2 = new AlertType();
+                alertType2.setDescription("brak aktywności");
+                alertTypeRepository.save(alertType2);
+
+
+                Alert alert = new Alert();
+                alert.setUser(user);
+                alert.setAlertType(alertType1);
+                alert.setDate(LocalDateTime.now());
+                alert.setDescription("Uwaga! Podczas treningu Twój puls osiagnął niebezpieczny poziom: 120 uderzeń na sekundę.");
+                alertRepository.save(alert);
+
+                Alert alert2 = new Alert();
+                alert2.setUser(user);
+                alert2.setAlertType(alertType2);
+                alert2.setDate(LocalDateTime.now());
+                alert2.setDescription("Uwaga! System wykrył brak aktywności podczas treningu.");
+                alertRepository.save(alert2);
+
             }
         }
 

@@ -4,12 +4,13 @@ package com.myfitband.server.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
 @Table(name = "workouts")
-public class Workout {
+public class Workout  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,10 +21,10 @@ public class Workout {
     private LocalDateTime stopDT;
 
     @OneToMany(mappedBy = "workout", fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonManagedReference(value = "workout-measurements")
     private Set<Measurement> measurements;
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "workout-gpsData")
     @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="workout")
     private Set<GPSdata> gpsData;
 
@@ -33,7 +34,7 @@ public class Workout {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user")
-    @JsonManagedReference
+    @JsonManagedReference(value = "user-workout")
     private User user;
 
     public Integer getWorkoutId() {
