@@ -1,5 +1,7 @@
 package com.myfitband.server.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,6 +13,7 @@ public class PhysicalProperties {
     private Integer physicalPropertyId;
 
     @OneToOne
+    @JsonManagedReference(value = "user-physicalProperties")
     private User user;
 
     private Integer height;
@@ -22,6 +25,10 @@ public class PhysicalProperties {
     private Double muscleMass;
 
     private Double water;
+
+    private Integer stressPulse; //tetno wysiłkowe
+
+    private Integer relaxPulse;
 
     public Integer getPhysicalPropertyId() {
         return physicalPropertyId;
@@ -77,5 +84,21 @@ public class PhysicalProperties {
 
     public void setWater(Double water) {
         this.water = water;
+    }
+
+    public Integer getStressPulse() {
+        return stressPulse;
+    }
+
+    public void setStressPulse(Integer stressPulse) {
+        this.stressPulse = stressPulse;
+    }
+
+    public Integer getRelaxPulse() {
+        return relaxPulse;
+    }
+
+    public void setRelaxPulse(Integer relaxPulse) {
+        this.relaxPulse = relaxPulse;
     }
 }

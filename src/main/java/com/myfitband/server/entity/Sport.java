@@ -1,10 +1,11 @@
 package com.myfitband.server.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "sports")
-public class Sport {
+public class Sport  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

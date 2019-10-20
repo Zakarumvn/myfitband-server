@@ -13,7 +13,7 @@ public class GPSdata {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer gpsDataId;
 
-    @JsonBackReference
+    @JsonBackReference(value = "workout-gpsData")
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="workoutId")
     private Workout workout;

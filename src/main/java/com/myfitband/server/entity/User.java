@@ -1,14 +1,17 @@
 package com.myfitband.server.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,12 +30,24 @@ public class User {
     private LocalDateTime birthDate;
 
     @OneToOne(mappedBy = "user")
+    @JsonBackReference(value = "user-physicalProperties")
     private PhysicalProperties physicalProperties;
 
     @OneToMany(mappedBy = "user")
-    @JsonBackReference
+    @JsonBackReference(value = "user-workout")
     private Set<Workout> workouts;
 
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference(value="user-alerts")
+    private List<Alert> alertList;
+
+    @OneToOne(mappedBy = "user")
+    @JsonBackReference(value = "user-settings")
+    private Setting setting;
+
+    @OneToMany(mappedBy = "user")
+    @JsonBackReference(value = "user-measurements")
+    private List<Measurement> weightMeasurementList;
     public User(){}
 
     public User(Integer id){
@@ -109,9 +124,29 @@ public class User {
 
     public void setPhysicalProperties(PhysicalProperties physicalProperties) {
         this.physicalProperties = physicalProperties;
-
-
     }
 
+    public List<Alert> getAlertList() {
+        return alertList;
+    }
 
+    public void setAlertList(List<Alert> alertList) {
+        this.alertList = alertList;
+    }
+
+    public Setting getSetting() {
+        return setting;
+    }
+
+    public void setSetting(Setting setting) {
+        this.setting = setting;
+    }
+
+    public List<Measurement> getWeightMeasurementList() {
+        return weightMeasurementList;
+    }
+
+    public void setWeightMeasurementList(List<Measurement> weightMeasurementList) {
+        this.weightMeasurementList = weightMeasurementList;
+    }
 }

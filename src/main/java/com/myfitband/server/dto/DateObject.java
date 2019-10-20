@@ -1,4 +1,4 @@
-package com.myfitband.server.entity;
+package com.myfitband.server.dto;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -6,6 +6,8 @@ import java.util.Date;
 public class DateObject implements Serializable {
 
     private Date date;
+
+    private Integer settingId;
 
     public DateObject(Date notificationTime) {
         this.date = notificationTime;
@@ -20,5 +22,13 @@ public class DateObject implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Integer getSettingId() {
+        return settingId;
+    }
+
+    public void setSettingId(Integer settingId) {
+        this.settingId = settingId;
     }
 }

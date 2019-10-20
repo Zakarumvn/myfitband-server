@@ -1,11 +1,9 @@
 package com.myfitband.server.controller;
 
 import com.myfitband.server.config.MockSession;
-import com.myfitband.server.dto.PulseDTO;
-import com.myfitband.server.entity.DateObject;
-import com.myfitband.server.entity.GPSdata;
-import com.myfitband.server.entity.Setting;
-import com.myfitband.server.entity.Workout;
+import com.myfitband.server.dto.DateObject;
+import com.myfitband.server.dto.MeasurementDTO;
+import com.myfitband.server.entity.*;
 import com.myfitband.server.service.GPSdataService;
 import com.myfitband.server.service.MeasurementService;
 import com.myfitband.server.service.SettingService;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RequestMapping("/workout")
 @RestController
@@ -46,7 +43,7 @@ public class WorkoutController {
     }
 
     @GetMapping("/pulse/{workoutId}")
-    public List<PulseDTO> getPulseMeasurements(@PathVariable Integer workoutId){
+    public List<MeasurementDTO> getPulseMeasurements(@PathVariable Integer workoutId){
         return measurementService.getPulseMeasurementsForChart(workoutId);
     }
 
@@ -60,16 +57,9 @@ public class WorkoutController {
         Setting setting = new Setting();
         setting.setNotificationTime(notificationDate.getDate());
         setting.setUser(session.getUser());
+        setting.setActive(Short.valueOf("1"));
+        setting.setSettingId(notificationDate.getSettingId());
         settingService.saveNotificationSettings(setting);
-    }
-
-    @PostMapping(value = "/settings/save")
-    public void saveSettings(Setting setting){
-        if(setting.getNotificationTime() != null){
-            setting.setUser(session.getUser());
-            setting.setActive(Short.valueOf("1"));
-            settingService.saveNotificationSettings(setting);
-        }
     }
 
     @GetMapping(value = "/map/{workoutId}")
@@ -77,4 +67,18 @@ public class WorkoutController {
         return gpSdataService.getGPSdataForWorkout(workoutId);
     }
 
+    @GetMapping("/physicalProperties")
+    public PhysicalProperties getPhysicalProperties(){
+        return settingService.loadPhysicalProperties(session.getUser().getUserId());
+    }
+
+    @GetMapping("/alerts")
+    public List<Alert> getAlerts(){
+        return settingService.loadAlerts(session.getUser().getUserId());
+    }
+
+    @GetMapping("/weight")
+    public List<MeasurementDTO> getWeightMeasurements(){
+        return measurementService.getWeightMeasurementsForChart(session.getUser().getUserId());
+    }
 }
