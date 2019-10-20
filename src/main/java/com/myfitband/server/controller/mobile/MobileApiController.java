@@ -4,13 +4,11 @@ import com.myfitband.server.dao.GPSDataRepository;
 import com.myfitband.server.dao.MeasurementRepository;
 import com.myfitband.server.dao.MeasurementTypeRepository;
 import com.myfitband.server.dao.WorkoutRepository;
-import com.myfitband.server.entity.MeasurementType;
-import com.myfitband.server.entity.Sport;
-import com.myfitband.server.entity.User;
-import com.myfitband.server.entity.Workout;
+import com.myfitband.server.entity.*;
 import com.myfitband.server.entity.mobile.LoginData;
 import com.myfitband.server.entity.mobile.TrainingData;
 import com.myfitband.server.entity.mobile.UserData;
+import com.myfitband.server.entity.mobile.WeightData;
 import com.myfitband.server.service.SportService;
 import com.myfitband.server.service.UserService;
 import org.springframework.http.MediaType;
@@ -81,8 +79,25 @@ public class MobileApiController {
         return PostResponse.ok();
     }
 
+    @PostMapping(value = "/newWeight", consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE}, produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+    public PostResponse newWeight(@RequestBody WeightData weightData) {
+        User user = userService.getDataOfUser(weightData.getLoginData())
+                .orElseThrow(() -> new IllegalArgumentException("Cannot create new weight for not existing user"));
+        MeasurementType measurementType = getWeightMeasurementType();
+        Measurement measurement = weightData.toMeasurement(measurementType, user);
+        measurementRepository.save(measurement);
+        return PostResponse.ok();
+    }
+
     private MeasurementType getPulseMeasurementType() {
-        return measurementTypeRepository.findAll().stream().findFirst()
+        return measurementTypeRepository.findAll().stream()
+                .filter(s -> s.getDescription().equalsIgnoreCase("pomiar pulsu")).findFirst()
+                .orElseThrow(() -> new IllegalStateException("Cannot create workout, as database is not ready"));
+    }
+
+    private MeasurementType getWeightMeasurementType() {
+        return measurementTypeRepository.findAll().stream()
+                .filter(s -> s.getDescription().equalsIgnoreCase("pomiar wagi")).findFirst()
                 .orElseThrow(() -> new IllegalStateException("Cannot create workout, as database is not ready"));
     }
 }
