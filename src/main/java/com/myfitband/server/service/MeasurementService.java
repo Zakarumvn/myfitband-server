@@ -13,8 +13,11 @@ import java.util.stream.Collectors;
 @Service
 public class MeasurementService {
 
-    @Autowired
-    MeasurementRepository measurementRepository;
+    private final MeasurementRepository measurementRepository;
+
+    public MeasurementService(MeasurementRepository measurementRepository) {
+        this.measurementRepository = measurementRepository;
+    }
 
     public List<PulseDTO> getPulseMeasurementsForChart(Integer workoutId){
         List<Measurement> pulseMeasurements = measurementRepository.findAllByWorkoutWorkoutId(workoutId);

@@ -1,9 +1,18 @@
 package com.myfitband.server.controller.mobile;
 
-import com.myfitband.server.UserService;
+import com.myfitband.server.dao.GPSDataRepository;
+import com.myfitband.server.dao.MeasurementRepository;
+import com.myfitband.server.dao.MeasurementTypeRepository;
+import com.myfitband.server.dao.WorkoutRepository;
+import com.myfitband.server.entity.MeasurementType;
+import com.myfitband.server.entity.Sport;
 import com.myfitband.server.entity.User;
+import com.myfitband.server.entity.Workout;
 import com.myfitband.server.entity.mobile.LoginData;
+import com.myfitband.server.entity.mobile.TrainingData;
 import com.myfitband.server.entity.mobile.UserData;
+import com.myfitband.server.service.SportService;
+import com.myfitband.server.service.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,9 +24,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class MobileApiController {
 
     private final UserService userService;
+    private final SportService sportService;
+    private final MeasurementTypeRepository measurementTypeRepository;
+    private final MeasurementRepository measurementRepository;
+    private final WorkoutRepository workoutRepository;
+    private final GPSDataRepository gpsDataRepository;
 
-    public MobileApiController(UserService userService) {
+    public MobileApiController(UserService userService, SportService sportService, MeasurementTypeRepository measurementTypeRepository, MeasurementRepository measurementRepository, WorkoutRepository workoutRepository, GPSDataRepository gpsDataRepository) {
         this.userService = userService;
+        this.sportService = sportService;
+        this.measurementTypeRepository = measurementTypeRepository;
+        this.measurementRepository = measurementRepository;
+        this.workoutRepository = workoutRepository;
+        this.gpsDataRepository = gpsDataRepository;
     }
 
     @PostMapping(value = "/register", consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE}, produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
@@ -44,5 +63,26 @@ public class MobileApiController {
             userService.removeUser(loginData);
         }
         return PostResponse.ok();
+    }
+
+    @PostMapping(value = "/postTraining", consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE}, produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+    public PostResponse postTraining(@RequestBody TrainingData trainingData) {
+        User user = userService.getDataOfUser(trainingData.getLoginData())
+                .orElseThrow(() -> new IllegalArgumentException("Cannot create workout for not existing user"));
+        Sport sport = sportService.findSportByName(trainingData.getSportName())
+                .orElseThrow(() -> new IllegalArgumentException("Cannot create workout for not existing sport"));
+        MeasurementType pulseMeasurementType = getPulseMeasurementType();
+
+        Workout workout = trainingData.toWorkout(sport, user);
+        workoutRepository.save(workout);
+
+        trainingData.toMeasurements(workout, pulseMeasurementType).forEach(measurementRepository::save);
+        trainingData.toGps(workout).forEach(gpsDataRepository::save);
+        return PostResponse.ok();
+    }
+
+    private MeasurementType getPulseMeasurementType() {
+        return measurementTypeRepository.findAll().stream().findFirst()
+                .orElseThrow(() -> new IllegalStateException("Cannot create workout, as database is not ready"));
     }
 }

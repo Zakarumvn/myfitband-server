@@ -1,8 +1,8 @@
 package com.myfitband.server.entity.mobile;
 
 public class LoginData {
-    private final String login;
-    private final String password;
+    private String login;
+    private String password;
 
     public LoginData(String login, String password) {
         this.login = login;
@@ -15,5 +15,13 @@ public class LoginData {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

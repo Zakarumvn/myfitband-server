@@ -1,13 +1,13 @@
-package com.myfitband.server;
+package com.myfitband.server.service;
 
 import com.myfitband.server.dao.UserRepository;
 import com.myfitband.server.entity.User;
 import com.myfitband.server.entity.mobile.LoginData;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Component
+@Service
 public class UserService {
 
     private final UserRepository userRepository;
@@ -38,7 +38,7 @@ public class UserService {
         userRepository.delete(userToRemove);
     }
 
-    private Optional<User> getDataOfUser(LoginData loginData) {
+    public Optional<User> getDataOfUser(LoginData loginData) {
         return userRepository
                 .findAll().stream()
                 .filter(u -> u.getLogin().equals(loginData.getLogin()) && u.getPassword().equals(loginData.getPassword()))
