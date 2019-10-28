@@ -1,6 +1,6 @@
 package com.myfitband.server.controller;
 
-import com.myfitband.server.config.MockSession;
+import com.myfitband.server.config.SessionService;
 import com.myfitband.server.dto.DateObject;
 import com.myfitband.server.dto.MeasurementDTO;
 import com.myfitband.server.entity.*;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/workout")
 @RestController
 public class WorkoutController {
@@ -21,7 +22,7 @@ public class WorkoutController {
     WorkoutService workoutService;
 
     @Autowired
-    MockSession session;
+    SessionService session;
 
     @Autowired
     MeasurementService measurementService;

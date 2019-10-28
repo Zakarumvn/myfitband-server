@@ -28,6 +28,10 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
     public boolean userExists(LoginData loginData) {
         return getDataOfUser(loginData).isPresent();
     }
@@ -43,5 +47,9 @@ public class UserService {
                 .findAll().stream()
                 .filter(u -> u.getLogin().equals(loginData.getLogin()) && u.getPassword().equals(loginData.getPassword()))
                 .findFirst();
+    }
+
+    public User findUserByUsername(String username){
+        return userRepository.findByLogin(username);
     }
 }

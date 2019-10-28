@@ -15,7 +15,7 @@ public class WorkoutService {
     WorkoutRepository workoutRepository;
 
     public List<Workout> getWorkoutList(Integer userId){
-        return workoutRepository.findAll();
+        return workoutRepository.findAllByOrderByStartDTDesc();
     }
 
     public Workout getWorkout(Integer workoutId){
