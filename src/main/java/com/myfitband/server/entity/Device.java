@@ -12,6 +12,10 @@ public class Device {
 
     private String fireBaseToken;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user")
+    private User user;
+
     public Integer getDeviceId() {
         return deviceId;
     }
@@ -26,5 +30,13 @@ public class Device {
 
     public void setFireBaseToken(String fireBaseToken) {
         this.fireBaseToken = fireBaseToken;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

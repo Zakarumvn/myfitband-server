@@ -1,14 +1,8 @@
 package com.myfitband.server.controller.mobile;
 
-import com.myfitband.server.dao.GPSDataRepository;
-import com.myfitband.server.dao.MeasurementRepository;
-import com.myfitband.server.dao.MeasurementTypeRepository;
-import com.myfitband.server.dao.WorkoutRepository;
+import com.myfitband.server.dao.*;
 import com.myfitband.server.entity.*;
-import com.myfitband.server.entity.mobile.LoginData;
-import com.myfitband.server.entity.mobile.TrainingData;
-import com.myfitband.server.entity.mobile.UserData;
-import com.myfitband.server.entity.mobile.WeightData;
+import com.myfitband.server.entity.mobile.*;
 import com.myfitband.server.service.SportService;
 import com.myfitband.server.service.UserService;
 import org.springframework.http.MediaType;
@@ -27,14 +21,16 @@ public class MobileApiController {
     private final MeasurementRepository measurementRepository;
     private final WorkoutRepository workoutRepository;
     private final GPSDataRepository gpsDataRepository;
+    private final DeviceRepository deviceRepository;
 
-    public MobileApiController(UserService userService, SportService sportService, MeasurementTypeRepository measurementTypeRepository, MeasurementRepository measurementRepository, WorkoutRepository workoutRepository, GPSDataRepository gpsDataRepository) {
+    public MobileApiController(UserService userService, SportService sportService, MeasurementTypeRepository measurementTypeRepository, MeasurementRepository measurementRepository, WorkoutRepository workoutRepository, GPSDataRepository gpsDataRepository, DeviceRepository deviceRepository) {
         this.userService = userService;
         this.sportService = sportService;
         this.measurementTypeRepository = measurementTypeRepository;
         this.measurementRepository = measurementRepository;
         this.workoutRepository = workoutRepository;
         this.gpsDataRepository = gpsDataRepository;
+        this.deviceRepository = deviceRepository;
     }
 
     @PostMapping(value = "/register", consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE}, produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
@@ -76,6 +72,14 @@ public class MobileApiController {
 
         trainingData.toMeasurements(workout, pulseMeasurementType).forEach(measurementRepository::save);
         trainingData.toGps(workout).forEach(gpsDataRepository::save);
+        return PostResponse.ok();
+    }
+
+    @PostMapping(value = "/newToken", consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE}, produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+    public PostResponse newToken(@RequestBody TokenData tokenData) {
+        User user = userService.getDataOfUser(tokenData.getLoginData())
+                .orElseThrow(() -> new IllegalArgumentException("Cannot create new weight for not existing user"));
+        deviceRepository.save(tokenData.toDevice(user));
         return PostResponse.ok();
     }
 
