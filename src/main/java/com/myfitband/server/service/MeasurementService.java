@@ -4,7 +4,6 @@ import com.myfitband.server.dao.MeasurementRepository;
 import com.myfitband.server.dto.MeasurementDTO;
 import com.myfitband.server.entity.Measurement;
 import com.myfitband.server.service.utils.MeasurementDtoUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class MeasurementService {
     }
 
     public List<MeasurementDTO> getPulseMeasurementsForChart(Integer workoutId){
-        List<Measurement> pulseMeasurements = measurementRepository.findAllByWorkoutWorkoutId(workoutId);
+        List<Measurement> pulseMeasurements = measurementRepository.findAllByWorkoutWorkoutIdOrderByDate(workoutId);
         return pulseMeasurements
                 .stream()
                 .map(m -> new MeasurementDTO(MeasurementDtoUtils.getHourAsString(m.getDate()),

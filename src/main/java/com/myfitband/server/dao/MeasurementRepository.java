@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface MeasurementRepository extends JpaRepository<Measurement, Integer> {
 
-    List<Measurement> findAllByWorkoutWorkoutId(Integer workoutId);
+    List<Measurement> findAllByWorkoutWorkoutIdOrderByDate(Integer workoutId);
 
     List<Measurement> findAllByUserUserIdAndUserNotNull(Integer userId);
 }
