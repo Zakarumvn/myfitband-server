@@ -3,6 +3,7 @@ package com.myfitband.server.service;
 import com.myfitband.server.dao.*;
 import com.myfitband.server.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -50,7 +51,7 @@ public class InitService {
             user.setEmail("testowa.kasia@gmail.com");
             user.setLogin("testowa");
             user.setBirthDate(LocalDateTime.now().minusYears(20));
-            user.setPassword("kasia");
+            user.setPassword(new BCryptPasswordEncoder().encode("kasia"));
             userRepository.save(user);
 
             PhysicalProperties physicalProperties = new PhysicalProperties();

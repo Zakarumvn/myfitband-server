@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface WorkoutRepository extends JpaRepository<Workout, Integer> {
 
-    List<Workout> findAllByOrderByStartDTDesc();
+    List<Workout> findAllByUserUserIdOrderByStartDTDesc(Integer userId);
 
 }
