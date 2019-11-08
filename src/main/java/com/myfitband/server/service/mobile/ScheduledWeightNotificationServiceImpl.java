@@ -38,7 +38,7 @@ public class ScheduledWeightNotificationServiceImpl implements ScheduledWeightNo
 
     @Override
     @Scheduled(cron = "0 * * ? * *")
-    public void pushNotifications() throws UnirestException, JsonProcessingException {
+    public void pushNotifications() {
         System.out.println("Sending notification...");
         LocalDateTime now = LocalDateTime.now();
 
