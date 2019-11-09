@@ -1,6 +1,7 @@
 package com.myfitband.server.entity.mobile;
 
 import com.myfitband.server.entity.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.ZoneId;
 import java.util.Date;
@@ -21,7 +22,7 @@ public class UserData {
         user.setEmail(email);
         user.setLogin(login);
         user.setBirthDate(birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-        user.setPassword(password);
+        user.setPassword(new BCryptPasswordEncoder().encode(password));
         return user;
     }
 

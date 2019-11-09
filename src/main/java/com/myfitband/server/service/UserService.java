@@ -3,6 +3,9 @@ package com.myfitband.server.service;
 import com.myfitband.server.dao.UserRepository;
 import com.myfitband.server.entity.User;
 import com.myfitband.server.entity.mobile.LoginData;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -11,6 +14,9 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -45,11 +51,13 @@ public class UserService {
     public Optional<User> getDataOfUser(LoginData loginData) {
         return userRepository
                 .findAll().stream()
-                .filter(u -> u.getLogin().equals(loginData.getLogin()) && u.getPassword().equals(loginData.getPassword()))
+                .filter(u -> u.getLogin().equals(loginData.getLogin())
+                        && passwordEncoder.matches(loginData.getPassword(), u.getPassword()))
                 .findFirst();
+
     }
 
-    public User findUserByUsername(String username){
+    public User findUserByUsername(String username) {
         return userRepository.findByLogin(username);
     }
 }
