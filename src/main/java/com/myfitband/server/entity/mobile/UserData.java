@@ -1,5 +1,6 @@
 package com.myfitband.server.entity.mobile;
 
+import com.myfitband.server.entity.PhysicalProperties;
 import com.myfitband.server.entity.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -15,6 +16,25 @@ public class UserData {
     private Date birthDate;
     private String password;
 
+    public Integer getPulseMin() {
+        return pulseMin;
+    }
+
+    public void setPulseMin(Integer pulseMin) {
+        this.pulseMin = pulseMin;
+    }
+
+    public Integer getPulseMax() {
+        return pulseMax;
+    }
+
+    public void setPulseMax(Integer pulseMax) {
+        this.pulseMax = pulseMax;
+    }
+
+    private Integer pulseMin;
+    private Integer pulseMax;
+
     public User mapToUser() {
         User user = new User();
         user.setFirstName(firstName);
@@ -24,6 +44,14 @@ public class UserData {
         user.setBirthDate(birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         user.setPassword(new BCryptPasswordEncoder().encode(password));
         return user;
+    }
+
+    public PhysicalProperties mapToPhysicalProperties(User user) {
+        PhysicalProperties physicalProperties = new PhysicalProperties();
+        physicalProperties.setUser(user);
+        physicalProperties.setRelaxPulse(pulseMin);
+        physicalProperties.setStressPulse(pulseMax);
+        return physicalProperties;
     }
 
     public String getLogin() {
