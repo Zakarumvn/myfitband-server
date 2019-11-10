@@ -118,6 +118,17 @@ public class MobileApiController {
         return PostResponse.ok();
     }
 
+    @PostMapping(value = "/newPulse", consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE}, produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+    public PostResponse newPulse(@RequestBody PulseData pulseData) {
+        User user = userService.getDataOfUser(pulseData.getLoginData())
+                .orElseThrow(() -> new IllegalArgumentException("Cannot create new weight for not existing user"));
+        PhysicalProperties physicalProperties = pulseData.mapToPhysicalProperties(user);
+        physicalPropertiesRepository.findAll().stream().filter(p -> p.getUser().getLogin().equals(user.getLogin()))
+                .forEach(physicalPropertiesRepository::delete);
+        physicalPropertiesRepository.save(physicalProperties);
+        return PostResponse.ok();
+    }
+
     @PostMapping(value = "/newPrzemeczenie", consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE}, produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public PostResponse newPrzemeczenie(@RequestBody NewAlert newAlert) {
         User user = userService.getDataOfUser(newAlert.getLoginData())

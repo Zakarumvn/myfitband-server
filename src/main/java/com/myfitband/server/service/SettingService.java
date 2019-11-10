@@ -40,7 +40,7 @@ public class SettingService {
     }
 
     public List<Alert> loadAlerts(Integer userId) {
-        return alertRepository.findByUserUserId(userId);
+        return alertRepository.findByUserUserIdOrderByDateDesc(userId);
     }
 
     public List<Setting> getNotificationFrom(LocalDateTime compareTime) {
