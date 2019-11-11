@@ -36,29 +36,39 @@ public class ScheduledWeightNotificationServiceImpl implements ScheduledWeightNo
         this.deviceRepository = deviceRepository;
     }
 
+    // cron expression - funkcja powinna sie uruchamiac sie co minute
     @Override
     @Scheduled(cron = "0 * * ? * *")
     public void pushNotifications() {
-        System.out.println("Sending notification...");
+        // pobranie bierzacej daty i godziny
         LocalDateTime now = LocalDateTime.now();
-
+        // pobranie ustawien powiadomien ktore powinny zostac wyslane o podanej godzinie i w danej minucie
         List<Setting> settings = settingService.getNotificationFrom(now);
+        // kazde powiadomienie dla tejze godziny
         settings.forEach(s -> {
-            Optional<Device> device = deviceRepository.findAll().stream().filter(d -> d.getUser().getLogin().equals(s.getUser().getLogin())).findFirst();
+            // pobranie skojarzonego tokenu tokenu uzytkownika
+            Optional<Device> device = deviceRepository.findAll().stream()
+                    .filter(d -> d.getUser().getUserId().equals(s.getUser().getUserId()))
+                    .findFirst();
+            // jezeli udalo sie znalezc token firebase dla uzytkownika
             if (device.isPresent()) {
                 try {
+                    // wysylane jest zapytanie POST - url: https://fcm.googleapis.com/fcm/send
                     Unirest.post(firebaseUrl)
+                            // dodanie naglowkow do zapytania HTTP
                             .header("content-type", "application/json")
-                            .header("authorization", firebaseServerKey)
+                            .header("authorization", firebaseServerKey) // wraz z kluczem aplikacji wygenerowanym
+                            // w konsoli firebase podczas rejestracji uslugi
                             .header("cache-control", "no-cache")
-                            .body(serialize(new FirebaseMessage(device.get().getFireBaseToken(), "MyFitBand - przypomnienie", "Czas na pomiar wagi!")))
+                            // body requestu - serializowany FirebaseMessage: token, tytul i tresc powiadomienia
+                            .body(serialize(new FirebaseMessage(device.get().getFireBaseToken(),
+                                    "MyFitBand - przypomnienie", "Czas na pomiar wagi!")))
                             .asString();
                 } catch (UnirestException | JsonProcessingException e) {
                     e.printStackTrace();
                 }
             }
         });
-
     }
 
     private String serialize(FirebaseMessage firebaseMessage) throws JsonProcessingException {

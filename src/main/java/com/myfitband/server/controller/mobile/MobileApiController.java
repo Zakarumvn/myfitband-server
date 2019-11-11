@@ -102,9 +102,13 @@ public class MobileApiController {
 
     @PostMapping(value = "/newToken", consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE}, produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public PostResponse newToken(@RequestBody TokenData tokenData) {
+        // pobierz dane uzytkownika o danych analogicznych do przeslanych w body
         User user = userService.getDataOfUser(tokenData.getLoginData())
+                // wyjatek w przypadku braku odpowiadajacego uzytkownika
                 .orElseThrow(() -> new IllegalArgumentException("Cannot create new weight for not existing user"));
+        // zapis tokenu w bazie danych
         deviceRepository.save(tokenData.toDevice(user));
+        // zwroc: udalo sie!
         return PostResponse.ok();
     }
 
